@@ -3,6 +3,19 @@
     <div class="col-sm-12 col-md-6">
       <div class="container">
         <h1 class="mb-5">Upload Photo</h1>
+        <div v-if="response" class="container my-2">
+          <div v-if="response.errors" class="alert alert-danger">
+            <ul>
+              <li v-for="error in response.errors" :key="error">
+                {{ error }}
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="response.success" class="alert alert-success">
+            {{ `${response.success}` }}
+          </div>
+        </div>
         <form
           enctype="multipart/form-data"
           id="uploadForm"
@@ -36,6 +49,7 @@ export default {
   data() {
     return {
       csrf_token: "",
+      response: null,
     };
   },
 
@@ -43,8 +57,6 @@ export default {
     uploadPhoto() {
       const uploadForm = document.getElementById("uploadForm");
       let form_data = new FormData(uploadForm);
-
-      console.log(form_data.get('photo'))
 
       fetch("/api/upload", {
         method: "POST",
@@ -54,22 +66,34 @@ export default {
         },
       })
         .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((error) => console.log(error));
+        .then((data) => this.onComplete(data, uploadForm))
+        .catch((error) => alert("Server Error"));
     },
 
     getCsrfToken() {
       fetch("/api/csrf-token")
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           this.csrf_token = data.csrf_token;
         })
         .catch((error) => console.log(error));
     },
+
+    onComplete(data, form) {
+    if (data.message) {
+      this.response = {
+        success: data.message,
+      };
+      form.reset()
+    } else {
+      this.response = {
+        errors: data,
+      };
+    }
   },
+  },
+
+  
 
   created() {
     this.getCsrfToken();

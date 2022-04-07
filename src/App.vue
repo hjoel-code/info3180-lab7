@@ -17,5 +17,7 @@ import AppFooter from "@/components/AppFooter.vue";
 <style>
 body {
   padding-top: 75px;
+  width: 100vw;
+  overflow-x: 'hidden' !important;
 }
 </style>

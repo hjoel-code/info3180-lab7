@@ -29,11 +29,7 @@ def upload():
         
         
         filename = secure_filename(image.filename)
-        print(filename)
-        
         path = app.config.get('UPLOAD_FOLDER')
-        
-        print(path)
         image.save(os.path.join(path, filename))
         
         response = {
