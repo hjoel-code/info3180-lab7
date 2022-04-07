@@ -10,6 +10,11 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/upload',
+      name: 'Form',
+      component: () => import('../views/UploadView.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
